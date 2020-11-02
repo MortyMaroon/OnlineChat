@@ -6,51 +6,44 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="LoginController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ClientController">
    <children>
       <BorderPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #fff;">
          <left>
-            <Pane prefHeight="400.0" prefWidth="300.0" BorderPane.alignment="CENTER">
-               <children>
-                  <ImageView fitHeight="400.0" fitWidth="300.0">
-                     <image>
-                        <Image url="@image/font.jpg" />
-                     </image>
-                  </ImageView>
-               </children>
-            </Pane>
+            <Pane prefHeight="400.0" prefWidth="300.0" style="-fx-background-color: linear-gradient(to right top, #743157, #67355d, #583860, #4a3b61, #3d3c5e, #36496f, #27587f, #00668b, #0088a1, #00a895, #00c36a, #a0d625);" styleClass="#051937 #210537 #A8EB12" BorderPane.alignment="CENTER" />
          </left>
          <center>
             <StackPane prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <children>
-                  <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #fff;">
+                  <Pane fx:id="pnlReg" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #929292;">
                      <children>
                         <Button fx:id="btnRegister" layoutX="13.0" layoutY="281.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: #800080;" text="Register" textFill="WHITE" />
-                        <PasswordField fx:id="lblConfPas" layoutX="157.0" layoutY="234.0" prefHeight="35.0" prefWidth="130.0" promptText="Confirm Password" />
-                        <PasswordField fx:id="lblNewPas" layoutX="13.0" layoutY="234.0" prefHeight="35.0" prefWidth="130.0" promptText="Password" />
-                        <TextField fx:id="lblName" layoutX="13.0" layoutY="136.0" prefHeight="35.0" prefWidth="130.0" promptText="First name" />
-                        <TextField fx:id="lblLastName" layoutX="157.0" layoutY="136.0" prefHeight="35.0" prefWidth="130.0" promptText="Last Name" />
-                        <TextField fx:id="lblNickname" layoutX="14.0" layoutY="186.0" prefHeight="35.0" prefWidth="155.0" promptText="Nickname" />
+                        <PasswordField fx:id="lblConfPas" layoutX="157.0" layoutY="234.0" prefHeight="35.0" prefWidth="130.0" promptText="Confirm Password" style="-fx-background-color: E0E0E0;" />
+                        <PasswordField fx:id="lblNewPas" layoutX="13.0" layoutY="234.0" prefHeight="35.0" prefWidth="130.0" promptText="Password" style="-fx-background-color: E0E0E0;" />
+                        <TextField fx:id="lblName" layoutX="13.0" layoutY="136.0" prefHeight="35.0" prefWidth="130.0" promptText="First name" style="-fx-background-color: E0E0E0;" />
+                        <TextField fx:id="lblLastName" layoutX="157.0" layoutY="136.0" prefHeight="35.0" prefWidth="130.0" promptText="Last Name" style="-fx-background-color: E0E0E0;" />
+                        <TextField fx:id="lblNickname" layoutX="14.0" layoutY="186.0" prefHeight="35.0" prefWidth="155.0" promptText="Nickname" style="-fx-background-color: E0E0E0;" />
                         <Label layoutX="27.0" layoutY="52.0" prefHeight="29.0" prefWidth="246.0" text="Register form" textFill="PURPLE">
                            <font>
                               <Font name="Cooper Black" size="35.0" />
                            </font>
                         </Label>
-                        <Button fx:id="btnBeck" layoutX="14.0" layoutY="348.0" mnemonicParsing="false" onMouseClicked="handleMouseClick" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: #800080;" text="Beck" textFill="WHITE" />
+                        <Button fx:id="btnBack" layoutX="14.0" layoutY="348.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: #800080;" text="Back" textFill="WHITE" />
                      </children>
                   </Pane>
-                  <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #fff;">
+                  <Pane fx:id="pnlSignIn" prefHeight="309.0" prefWidth="150.0" style="-fx-background-color: #929292;">
                      <children>
-                        <TextField fx:id="lblLogin" layoutX="60.0" layoutY="129.0" prefHeight="35.0" prefWidth="180.0" promptText="Login" />
-                        <PasswordField fx:id="lblPass" layoutX="60.0" layoutY="183.0" prefHeight="35.0" prefWidth="180.0" promptText="Password" />
-                        <Button fx:id="btnSignIn" layoutX="170.0" layoutY="238.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: #800080;" text="Sign in" textFill="WHITE" />
-                        <Label contentDisplay="CENTER" layoutX="91.0" layoutY="26.0" prefHeight="83.0" prefWidth="119.0" text="LogIn" textAlignment="CENTER" textFill="PURPLE">
+                        <TextField fx:id="lblLogin" layoutX="60.0" layoutY="129.0" prefHeight="35.0" prefWidth="180.0" promptText="Login" style="-fx-background-color: E0E0E0;" />
+                        <PasswordField fx:id="lblPass" layoutX="60.0" layoutY="183.0" prefHeight="35.0" prefWidth="180.0" promptText="Password" style="-fx-background-color: E0E0E0;" />
+                        <Button fx:id="btnSignIn" layoutX="170.0" layoutY="244.0" mnemonicParsing="false" onAction="#signIN" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: #00B34E; -fx-background-radius: 1em;" text="Sign in" textFill="WHITE" />
+                        <Label contentDisplay="CENTER" layoutX="91.0" layoutY="26.0" prefHeight="83.0" prefWidth="119.0" text="LogIn" textAlignment="CENTER" textFill="#00ff6a">
                            <font>
                               <Font name="Cooper Black" size="40.0" />
                            </font>
                         </Label>
-                        <Button fx:id="btnSignUp" layoutX="60.0" layoutY="238.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: #800080;" text="Register" textFill="WHITE" />
-                        <Button fx:id="btnExit" layoutX="115.0" layoutY="356.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: #800080;" text="Exit" textFill="WHITE" />
+                        <Button fx:id="btnSignUp" layoutX="60.0" layoutY="244.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: #00B34E; -fx-background-radius: 1em;" text="Register" textFill="WHITE" />
+                        <Button fx:id="btnExit" layoutX="115.0" layoutY="356.0" mnemonicParsing="false" onAction="#exit" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: #00B34E; -fx-background-radius: 1em;" text="Exit" textFill="WHITE" />
+                        <Label fx:id="loginMessageLable" alignment="CENTER" layoutX="60.0" layoutY="223.0" prefHeight="17.0" prefWidth="180.0" />
                      </children>
                   </Pane>
                </children>
