@@ -52,7 +52,7 @@ public class ClientHandler {
                         sendMsg("/busy");
                     }
                 } else {
-                    sendMsg("Неверный логин/пароль");
+                    sendMsg("/nosuch");
                 }
             }
         }
@@ -82,7 +82,6 @@ public class ClientHandler {
             String str = in.readUTF();
             if (str.startsWith("/")) {
                 if (str.equals("/end")) {
-                    out.writeUTF("/serverClosed");
                     break;
                 }
                 if (str.startsWith("/w")) {

@@ -7,7 +7,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 
-public class Main extends Application {
+public class MainClient extends Application {
 
     private double xOffset = 0;
     private double yOffset = 0;

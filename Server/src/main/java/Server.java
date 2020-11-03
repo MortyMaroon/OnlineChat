@@ -4,21 +4,25 @@ import java.net.Socket;
 import java.util.Vector;
 
 public class Server {
-    private Vector<ClientHandler> clients;
+    private final Vector<ClientHandler> clients;
 
     public Server() {
         clients = new Vector<>();
         ServerSocket server = null;
         Socket socket = null;
+
         try {
+
             AuthService.connect();
             server = new ServerSocket(8189);
             System.out.println("Server started");
+
             while (true) {
                 socket = server.accept();
                 System.out.println("Client accepted");
                 subscribe(new ClientHandler(this, socket));
             }
+
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -45,9 +49,11 @@ public class Server {
     }
 
     public boolean checkNick(String nick) {
-        for (ClientHandler client: clients) {
-            if (client.getNick().equals(nick)) {
-                return false;
+        if (clients.isEmpty()) {
+            for (ClientHandler client: clients) {
+                if (client.getNick().equals(nick)) {
+                    return false;
+                }
             }
         }
         return true;

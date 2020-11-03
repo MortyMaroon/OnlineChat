@@ -43,7 +43,7 @@
                         </Label>
                         <Button fx:id="btnSignUp" layoutX="60.0" layoutY="244.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: #00B34E; -fx-background-radius: 1em;" text="Register" textFill="WHITE" />
                         <Button fx:id="btnExit" layoutX="115.0" layoutY="356.0" mnemonicParsing="false" onAction="#exit" prefHeight="30.0" prefWidth="70.0" style="-fx-background-color: #00B34E; -fx-background-radius: 1em;" text="Exit" textFill="WHITE" />
-                        <Label fx:id="loginMessageLable" alignment="CENTER" layoutX="60.0" layoutY="223.0" prefHeight="17.0" prefWidth="180.0" />
+                        <Label fx:id="loginMessageLable" alignment="CENTER" layoutX="60.0" layoutY="223.0" prefHeight="17.0" prefWidth="180.0" textOverrun="CLIP" wrapText="true" />
                      </children>
                   </Pane>
                </children>

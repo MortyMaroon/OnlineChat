@@ -3,6 +3,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -25,6 +26,9 @@ public class ClientController {
 
     @FXML
     private Label loginMessageLable;
+
+    @FXML
+    private Pane pnlReg;
 
     private void connect() {
         try {
@@ -50,11 +54,12 @@ public class ClientController {
         while (true) {
             String str = in.readUTF();
             if (str.startsWith("/authok")) {
-                System.exit(0);
-                break;
+                loginMessageLable.setText("Вы авторизировались");
+                System.out.println("Вы авторизировались");
+                // TODO: 04.11.2020
             } else if (str.startsWith("/busy")) {
                 loginMessageLable.setText("This user is online.");
-            } else {
+            } else if (str.startsWith("/nosuch")){
                 loginMessageLable.setText("Invalid Login. Please try again.");
             }
         }
@@ -63,7 +68,6 @@ public class ClientController {
     private void read() throws IOException {
         while (true) {
             String str = in.readUTF();
-            if (str.equals("/serverClosed")) break;
         }
     }
 
@@ -74,7 +78,7 @@ public class ClientController {
                 connect();
             }
             try {
-                out.writeUTF("/auth" + lblLogin.getText() + " " + lblPass.getText());
+                out.writeUTF("/auth " + lblLogin.getText() + " " + lblPass.getText());
                 lblLogin.clear();
                 lblPass.clear();
             } catch (IOException e) {
@@ -106,6 +110,13 @@ public class ClientController {
 
     @FXML
     public void exit(ActionEvent actionEvent) {
+        if (socket != null || !socket.isClosed()){
+            try {
+                out.writeUTF("/end");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         System.exit(0);
     }
 }
