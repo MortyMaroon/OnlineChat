@@ -1,5 +1,5 @@
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -9,26 +9,30 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 
-public class ClientController {
+public class ClientController implements Initializable {
     Socket socket;
     DataInputStream in;
     DataOutputStream out;
     final String IP = "localhost";
     final int PORT = 8189;
+    private boolean loginOk = false;
+    private boolean nickOk = false;
 
     @FXML
-    private TextField lblLogin;
+    private TextField Login, Name, LastName, NewLogin, Nickname;
 
     @FXML
-    private PasswordField lblPass;
+    private PasswordField Password, NewPassword, ConfPassword;
 
     @FXML
-    private Label loginMessageLable;
+    private Label SignInMessage, SignUpMessage;
 
     @FXML
-    private Pane pnlReg;
+    private Pane pnlReg, pnlSignIn;
 
     private void connect() {
         try {
@@ -38,7 +42,7 @@ public class ClientController {
             new Thread(() -> {
                 try {
                     authorization();
-                    read();
+//                    read();
                 } catch (IOException e) {
                     e.printStackTrace();
                 } finally {
@@ -53,41 +57,36 @@ public class ClientController {
     private void authorization() throws IOException {
         while (true) {
             String str = in.readUTF();
-            if (str.startsWith("/authok")) {
-                loginMessageLable.setText("Вы авторизировались");
+            if (str.startsWith("/authOk")) {
+                SignInMessage.setText("Вы авторизировались");
                 System.out.println("Вы авторизировались");
                 // TODO: 04.11.2020
-            } else if (str.startsWith("/busy")) {
-                loginMessageLable.setText("This user is online.");
-            } else if (str.startsWith("/nosuch")){
-                loginMessageLable.setText("Invalid Login. Please try again.");
+            }
+            if (str.startsWith("/busy")) SignInMessage.setText("This user is online.");
+            if (str.startsWith("/noSuch")) SignInMessage.setText("Invalid Login. Please try again.");
+            if (str.startsWith("/loginOk")) {
+                this.loginOk = true;
+            }
+            if (str.startsWith("/nickOk")) {
+                this.nickOk = true;
             }
         }
     }
 
-    private void read() throws IOException {
-        while (true) {
-            String str = in.readUTF();
-        }
-    }
+//    private void read() throws IOException {
+//        while (true) {
+//            String str = in.readUTF();
+//        }
+//    }
 
-    @FXML
     public void signIN() {
-        if (!lblLogin.getText().isEmpty() && !lblPass.getText().isEmpty()) {
-            if (socket == null || socket.isClosed()) {
-                connect();
-            }
-            try {
-                out.writeUTF("/auth " + lblLogin.getText() + " " + lblPass.getText());
-                lblLogin.clear();
-                lblPass.clear();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        if (!Login.getText().isEmpty() && !Password.getText().isEmpty()) {
+            sendMassage("/auth " + Login.getText() + " " + Password.getText());
+            Login.clear();
+            Password.clear();
         } else {
-            loginMessageLable.setText("Please enter login and password.");
+            SignInMessage.setText("Please enter login and password.");
         }
-
     }
 
     public void closeConnection() {
@@ -108,9 +107,8 @@ public class ClientController {
         }
     }
 
-    @FXML
-    public void exit(ActionEvent actionEvent) {
-        if (socket != null || !socket.isClosed()){
+    public void exit() {
+        if (socket != null){
             try {
                 out.writeUTF("/end");
             } catch (IOException e) {
@@ -118,5 +116,64 @@ public class ClientController {
             }
         }
         System.exit(0);
+    }
+
+    public void changeSignUpMenu() {
+        pnlReg.toFront();
+        pnlReg.setVisible(true);
+        pnlReg.setDisable(false);
+        pnlSignIn.setDisable(true);
+        pnlSignIn.setVisible(false);
+    }
+
+    public void changeSignInMenu() {
+        pnlSignIn.toFront();
+        pnlSignIn.setVisible(true);
+        pnlSignIn.setDisable(false);
+        pnlReg.setDisable(true);
+        pnlReg.setVisible(false);
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        connect();
+        changeSignInMenu();
+    }
+
+    public void signUp() {
+        SignUpMessage.setText("");
+        if (!Name.getText().isEmpty() &&
+                !LastName.getText().isEmpty() &&
+                !NewLogin.getText().isEmpty() &&
+                !Nickname.getText().isEmpty() &&
+                !NewPassword.getText().isEmpty() &&
+                !ConfPassword.getText().isEmpty()
+        ) {
+            if (!NewPassword.getText().equals(ConfPassword.getText())) {
+                SignUpMessage.setText("Passwords do not match.");
+            } else {
+                sendMassage("/checkLogin" + Login.getText() + " " + Password.getText());
+                sendMassage("/checkNick" + Login.getText() + " " + Password.getText());
+                if (loginOk && nickOk) {
+                    sendMassage("/auth " + Login.getText() + " " + Password.getText());
+                }
+            }
+        } else {
+            SignUpMessage.setText("Please enter all data.");
+        }
+        Name.clear();
+        LastName.clear();
+        NewLogin.clear();
+        Nickname.clear();
+        NewPassword.clear();
+        ConfPassword.clear();
+    }
+
+    private void sendMassage(String massage) {
+        try {
+            out.writeUTF(massage);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -18,12 +18,11 @@ public class ClientHandler {
         try {
             this.server = server;
             this.socket = socket;
-            this.server = server;
             this.in = new DataInputStream(socket.getInputStream());
             this.out = new DataOutputStream(socket.getOutputStream());
             new Thread(() -> {
                 try {
-                    authorization();
+                    signIn();
                     readMsg();
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -36,26 +35,60 @@ public class ClientHandler {
         }
     }
 
-    public void authorization() throws IOException {
+    public void signIn() throws IOException {
         while (true) {
             String str = in.readUTF();
-            if (str.startsWith("/auth")) {
-                String[] parts = str.split(" ");
-                String newNick = AuthService.getNickByLoginAndPass(parts[1], parts[2]);
-                if (newNick != null) {
-                    if (server.checkNick(newNick)){
-                        sendMsg("/authok");
-                        nick = newNick;
-                        server.subscribe(this);
-                        return;
-                    } else {
-                        sendMsg("/busy");
-                    }
-                } else {
-                    sendMsg("/nosuch");
-                }
-            }
+            if (str.startsWith("/auth"))
+                if (authorization(str)) return;
+            if (str.startsWith("/checkLogin")) checkLogin(str);
+            if (str.startsWith("/checkNick")) checkNick(str);
+            if (str.startsWith("/reg"))
+                if (registration(str)) return;
         }
+    }
+
+    private void checkLogin(String str) {
+        String[] parts = str.split(" ");
+        String massage = AuthService.checkLogin(parts[1]);
+        if (massage != null) {
+            sendMsg("/loginOk");
+        }
+    }
+
+    private void checkNick(String str) {
+        String[] parts = str.split(" ");
+        String massage = AuthService.checkNickName(parts[1]);
+        if (massage != null) {
+            sendMsg("/nickOk");
+        }
+
+    }
+
+    private boolean authorization(String str) {
+        String[] parts = str.split(" ");
+        String Nick = AuthService.getNickByLoginAndPass(parts[1], parts[2]);
+        if (Nick != null) {
+            if (server.checkNick(Nick)){
+                sendMsg("/authOk");
+                this.nick = Nick;
+                server.subscribe(this);
+                return true;
+            } else {
+                sendMsg("/busy");
+            }
+        } else {
+            sendMsg("/noSuch");
+        }
+        return false;
+    }
+
+    private boolean registration(String str) {
+        String[] parts = str.split(" ");
+        String Nick = AuthService.tryRegister(parts[1], parts[2], parts[3], parts[4], parts[5]);
+        sendMsg("/authOk");
+        this.nick = Nick;
+        server.subscribe(this);
+        return true;
     }
 
     public void closeConnection() {
