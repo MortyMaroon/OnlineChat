@@ -40,28 +40,17 @@ public class ClientHandler {
             String str = in.readUTF();
             if (str.startsWith("/auth"))
                 if (authorization(str)) return;
-            if (str.startsWith("/checkLogin")) checkLogin(str);
-            if (str.startsWith("/checkNick")) checkNick(str);
             if (str.startsWith("/reg"))
                 if (registration(str)) return;
         }
     }
 
-    private void checkLogin(String str) {
-        String[] parts = str.split(" ");
-        String massage = AuthService.checkLogin(parts[1]);
-        if (massage != null) {
-            sendMsg("/loginOk");
-        }
+    private boolean checkLogin(String str) {
+        return AuthService.checkLogin(str) != null;
     }
 
-    private void checkNick(String str) {
-        String[] parts = str.split(" ");
-        String massage = AuthService.checkNickName(parts[1]);
-        if (massage != null) {
-            sendMsg("/nickOk");
-        }
-
+    private boolean checkNick(String str) {
+        return AuthService.checkNickName(str) != null;
     }
 
     private boolean authorization(String str) {
@@ -84,11 +73,19 @@ public class ClientHandler {
 
     private boolean registration(String str) {
         String[] parts = str.split(" ");
-        String Nick = AuthService.tryRegister(parts[1], parts[2], parts[3], parts[4], parts[5]);
-        sendMsg("/authOk");
-        this.nick = Nick;
-        server.subscribe(this);
-        return true;
+        if (!checkLogin(parts[5])) {
+            sendMsg("/loginNO");
+            return false;
+        } else if (!checkNick(parts[3])) {
+            sendMsg("/nickNO");
+            return false;
+        } else {
+            String Nick = AuthService.tryRegister(parts[1], parts[2], parts[3], parts[4], parts[5]);
+            sendMsg("/authOk");
+            this.nick = Nick;
+            server.subscribe(this);
+            return true;
+        }
     }
 
     public void closeConnection() {

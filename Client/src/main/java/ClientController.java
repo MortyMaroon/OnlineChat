@@ -19,8 +19,6 @@ public class ClientController implements Initializable {
     DataOutputStream out;
     final String IP = "localhost";
     final int PORT = 8189;
-    private boolean loginOk = false;
-    private boolean nickOk = false;
 
     @FXML
     private TextField Login, Name, LastName, NewLogin, Nickname;
@@ -58,18 +56,12 @@ public class ClientController implements Initializable {
         while (true) {
             String str = in.readUTF();
             if (str.startsWith("/authOk")) {
-                SignInMessage.setText("Вы авторизировались");
-                System.out.println("Вы авторизировались");
                 // TODO: 04.11.2020
             }
             if (str.startsWith("/busy")) SignInMessage.setText("This user is online.");
             if (str.startsWith("/noSuch")) SignInMessage.setText("Invalid Login. Please try again.");
-            if (str.startsWith("/loginOk")) {
-                this.loginOk = true;
-            }
-            if (str.startsWith("/nickOk")) {
-                this.nickOk = true;
-            }
+            if (str.startsWith("/loginNO")) SignUpMessage.setText("Login is busy.");
+            if (str.startsWith("/nickNO")) SignUpMessage.setText("Nickname is busy.");
         }
     }
 
@@ -153,10 +145,6 @@ public class ClientController implements Initializable {
                 SignUpMessage.setText("Passwords do not match.");
             } else {
                 sendMassage("/checkLogin" + Login.getText() + " " + Password.getText());
-                sendMassage("/checkNick" + Login.getText() + " " + Password.getText());
-                if (loginOk && nickOk) {
-                    sendMassage("/auth " + Login.getText() + " " + Password.getText());
-                }
             }
         } else {
             SignUpMessage.setText("Please enter all data.");
